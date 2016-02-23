@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2016 by p-thak (http://jsbin.com/cacuxi/16/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+  <script type="text/javascript" src="javascript/jquery-1.3.2.min.js"></script>
+ 
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
+  <script src="./avatar.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title>JS Bin</title>
+  
+  <script>
+    
+  </script>
+
+
+<style id="jsbin-css">
+	.User-list {
+	  list-style: none;
+	}
+
+	.Avatar {
+      text-align: absolute;
+      float:left;
+      display: table-cell;
+      vertical-align: middle;
+    text-align: center;
+    width: 180px;
+    height: 350px;
+      padding: 10px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    margin-top: 35px;
+    border: 1px solid #4d4d4d;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+                 border-radius: 3px;
+	}
+
+.Avatar * {
+  vertical-align: middle;
+}
+
+.Avater span {
+  display: inline-block;
+  height: 100%;
+  widht: 1px;
+}
+
+
+	.Avatar img {
+	  width: 100px;
+	  height: 100px;
+	  border-radius: 50%;
+	}
+
+	.Avatar h4 {
+	  text-transform: capitalize;
+	  color: Blue;
+	}
+
+  .Avatar p {
+    text-transform: capitalize;
+    color: Black;
+  }
+
+  .submitForm {
+  text-align: center;
+}
+
+body {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    background: #2C9F1C;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+	.title {
+		height:50px;
+	    /*
+	    background:#F0F0F0;
+		
+	    border:1px solid #CCC;
+	    */
+	    width:475px;
+	    margin:0px auto;
+	    text-align: center;
+	    font-family: sans-serif;
+	    font-style: oblique;
+	    font-size: 30px;
+	    font-weight: 15%;
+	    padding: 10px;
+	}
+
+	.content {
+		background-color: #F0F0F0;
+		border: 5px solid #3B0EE8;
+		color: #3B0EE8;
+		margin-right: auto;
+		margin-left: auto;
+		padding: 15px;
+		width: 715px;
+		border-radius: 10px;
+		margin-top: 15%;
+	}
+
+	input {
+		vertical-align: auto;
+	}
+
+  .winSentence {
+    font: bold;
+  }
+
+</style>
+</head>
+<body>
+<div class= "content" ng-app='app' ng-controller='mainCtrl'>
+	<h1 class="title">Who Will Win In A FIGHT?!</h1>
+<div class="submitForm">
+	<form name='userForm' ng-submit='addNew(userForm)'>
+	      <input placeholder='Name' ng-model='userForm.name'/>
+          <input placeholder='Weight' ng-model='userForm.weight'/>
+       <input placeholder='Age' ng-model='userForm.age'/>
+       <input placeholder='Athletic ability' ng-model='userForm.athletics'/>
+       <br>
+       <input placeholder='Relationships' ng-model='userForm.relationships'/>
+       <input placeholder='Spirit Animal' ng-model='userForm.spiritAnimal'/>
+	      <input placeholder='Image Url' ng-model='userForm.url'/>
+        <br>
+	      <button type='submit'>Add New Player</button>
+	</form>
+	<ul class='User-list'>
+	 <li ng-repeat='user in users'>
+	   <avatar user = 'user' ng-click=alert("here")/>
+       
+	 </li>
+   <h2>
+    Choose who will fight and find who will win.
+  </h2>
+      
+      <select ng-model="myselect" ng-options="user as user.name for user in users"></select>
+      <select ng-model="myselect2" ng-options="user as user.name for user in users"></select>
+      <br>
+      <br>
+
+
+ <button class="btn btn-primary" ng-if="myselect!=myselect2"  ng-click="Battle(myselect,myselect2)" >Fight</button>
+    <!-- 
+<details id="details" ng-open="open">
+   <summary>Fight!</summary>
+ <!--
+<button class="btn btn-primary"  ng-if="myselect!=myselect2" ng-click="open()">Fight</button>
+-->
+ <!--
+  <container class="winBox">
+    <p class = "winSentence"> The Winner is  {{winnerName}}</p> 
+    <img src={{winnerURL}} width = "100px">
+
+    <p>{{winnerName}}'s score = {{winnerScore}}</p>
+     {{loserName}}'s score = {{loserScore}} </p><br>
+  </container>
+</details>
+-->
+<div class="modal" modal="showModal" ng-show="showModal">
+ <h3 class = "winSentence"> The Winner is  {{winnerName}}</h3> 
+    <img src={{winnerURL}} width = "100px">
+
+    <p>{{winnerName}}'s score = {{winnerScore}}</p>
+     {{loserName}}'s score = {{loserScore}} </p><br>
+     <div class="modal-body">
+        <p>Play Again?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="cancel()">No</button>
+        <button type="button" class="btn btn-primary" ng-click="ok()">Yes</button>
+      </div>
+
+</div>
+<script id="jsbin-javascript">
+
+var winnerName;
+var winnerURL;
+var winnerScore;
+var loserScore;
+var loserName;
+
+var app = angular.module('app', []);
+app.directive('avatar',avatarDirective);
+
+
+app.controller('mainCtrl', mainCtrl);
+
+function mainCtrl ($scope) {
+   $scope.winner = 'test';
+  
+  $scope.users = [{
+    name: 'Tom Cruise',
+    weight: 148,
+    age: 53,
+    athletics: 9,
+    relationships: 6,
+    spiritAnimal: 'dolphin',
+    avatarUrl: 'https://pbs.twimg.com/profile_images/3540801931/ea661360f4d36fc06d60e63199939615_400x400.jpeg'
+  },{
+    name: 'Ghandi',
+    weight: 110,
+    age: 78,
+    athletics: 2,
+    relationships: 1,
+    spiritAnimal: 'sloth',
+    avatarUrl: 'http://www.wisdompills.com/wp-content/uploads/2015/08/ghandi.jpg'
+  }, {
+    name: 'Taco',
+    weight: 160,
+    age: 21,
+    athletics: 7,
+    relationships: 10,
+    spiritAnimal: "cobra",
+    avatarUrl: 'https://media.giphy.com/media/3KAxGKtEQpTmo/giphy.gif'
+  }, {
+    name: 'Ron Swanson',
+    weight: 200,
+    age: 45,
+    athletics: 6,
+    relationships: 3,
+    spiritAnimal: "Ron Swanson",
+    avatarUrl: 'http://a.fod4.com/misc/swansonsmile1.gif'
+  }, {
+    name: 'Grilled Cheese',
+    weight: 160,
+    age: 23,
+    athletics: 9,
+    relationships: 6,
+    spiritAnimal: 'tiger',
+    avatarUrl: 'http://rack.3.mshcdn.com/media/ZgkyMDEzLzA0LzEyLzhjL0dyaWxsZWRDaGVlLjI1ZDJhLmdpZgpwCXRodW1iCTEyMDB4OTYwMD4/4f5b8964/81f/Grilled-Cheese-GIF-8.gif'
+  }, {
+    name: 'Dr. Mark Clement',
+    weight: 180,
+    age: 53,
+    athletics: 10,
+    relationships: 1,
+    spiritAnimal: 'dragon',
+    avatarUrl: 'http://mclement.us/xClem1.png.pagespeed.ic.HVNBEj_8JG.webp'
+  }];
+  
+  $scope.addNew = function (user) {
+
+    $scope.users.push({
+      name: user.name,
+      weight: user.weight,
+      age: user.age,
+      athletics: user.athletics,
+      relationships: user.relationships,
+      spiritAnimal: user.spiritAnimal,
+      avatarUrl: user.url
+    });
+    user.name = '';
+    user.weight= '';
+    user.age= '';
+    user.athletics = '';
+    user.relationships = '';
+    user.spiritAnimal = '';
+    user.url = '';
+  };
+
+  $scope.open = function () {
+    console.log("PLAYER 1: " + $scope.myselect.name + " PLAYER 2: " + $scope.myselect2.name);
+        
+            $scope.showModal = true;
+        
+        };
+
+        $scope.ok = function () {
+            $scope.showModal = false;
+        };
+
+        $scope.cancel = function () {
+            $scope.showModal = false;
+        };
+  
+  $scope.battleScore = function (user) {
+console.log("I AM HERE!");
+    $scope.showModal = true;
+    var weight = user.weight;
+    var age =user.age;
+    var numofRelationships=user.relationships;
+    var animalLength=user.spiritAnimal.length;
+    var nameLength=user.name.length;
+    var totalScore=0;
+    console.log(weight);
+    console.log(age);
+    console.log(numofRelationships);
+    console.log(animalLength);
+    console.log(nameLength);
+    console.log(totalScore);
+
+    totalScore+=weight;
+
+                if(weight>200){
+
+                        totalScore-=(weight-200)*5;
+                }
+
+                if(weight<160){
+
+                        totalScore-=(160-weight)*8;
+                }
+
+         totalScore+=age;
+
+                if(age>40){
+
+                        totalScore-=(age-40)*8;
+                }
+
+                if(age<18){
+
+                        totalScore-=(18-age)*5;
+                }
+
+          totalScore+=animalLength;
+
+           if(animalLength>10){
+
+                        totalScore-=(animalLength-10)*5;
+                }
+
+                if(animalLength<5){
+
+                        totalScore-=(5-animalLength)*8;
+                }
+
+          totalScore+=nameLength;
+
+           if(nameLength>10){
+
+                        totalScore-=(nameLength-10)*5;
+                }
+
+                if(nameLength<5){
+
+                        totalScore-=(5-nameLength)*8;
+                }
+                totalScore+=numofRelationships*5;
+
+           if(numofRelationships>6){
+
+                        totalScore-=(numofRelationships-6)*5;
+                }
+
+                if(numofRelationships<2){
+
+                        totalScore-=(2-numofRelationships)*20;
+                }
+                console.log(name);
+                console.log(totalScore);
+                return totalScore;
+
+   };
+
+  
+$scope.Battle = function (user1,user2) {
+console.log("I AM HERE!");
+        if($scope.battleScore(user1)>$scope.battleScore(user2)){
+               console.log(user1.name);
+
+                 $scope.winnerName = user1.name;
+                 $scope.winnerURL = user1.avatarUrl;
+                 $scope.winnerScore=$scope.battleScore(user1);
+
+                  $scope.loserName = user2.name;
+                  $scope.loserScore=$scope.battleScore(user2);
+                  console.log(winnerURL);
+                return user1; 
+
+        }
+        else if($scope.battleScore(user1)<$scope.battleScore(user2)){
+               console.log(user2.name);
+
+                $scope.winnerName = user2.name;
+                 $scope.winnerURL = user2.avatarUrl;
+                 $scope.winnerScore=$scope.battleScore(user2);
+
+                  $scope.loserName = user1.name;
+                  $scope.loserScore=$scope.battleScore(user1);
+                    console.log(winnerURL);
+                return user2;
+        }
+
+        else
+        {
+                var number= Math.random() * (10 - 1) + 1;
+
+                if(number % 2 === 0)
+          {
+            console.log(user2.name);
+            $scope.winnerName = user2.name;
+             $scope.winnerURL = user2.avatarUrl;
+             $scope.winnerScore=$scope.battleScore(user2);
+
+              $scope.loserName = user1.name;
+              $scope.loserScore=$scope.battleScore(user1);
+            return user2;
+          }
+      else{
+        console.log(user1.name);
+         $scope.winnerName = user1.name;
+         $scope.winnerURL = user1.avatarUrl;
+         $scope.winnerScore=$scope.battleScore(user1);
+
+          $scope.loserName = user2.name;
+          $scope.loserScore=$scope.battleScore(user2);
+        return user1;
+      }
+
+        }
+
+
+  };
+
+} 
+
+
+function avatarDirective () {
+  return {
+    scope: {
+      user: '=' /* [1] */
+    },
+    restrict: 'E', /* [2] */
+    template: (
+      '<div class="Avatar" ng-click="addOnClick()">' +
+        '<img ng-src="{{user.avatarUrl}}" ng-click=alert("here") />' +
+        '<h4>{{user.name}}</h4>' +
+      '<p>Weight: {{user.weight}}</p>' + '<p>Age: {{user.age}}</p>' +
+      '<p>Athletics: {{user.athletics}}</p>' + 
+      '<p>Relationships: {{user.relationships}}</p>' +
+      '<p>Sprit Animal: {{user.spiritAnimal}}</p>' +
+      '</div>'
+    ), /* [3] */
+    link: link
+  };
+  
+  function addOnClick(scope) {
+  $scope.items.push();
+}
+
+
+  function link (scope) { /* [4] */
+    if (!scope.user.avatarUrl) {
+      scope.user.avatarUrl = 'http://thealmanac.org/assets/img/default_avatar.png';
+    }
+  }
+  function go(user) { /* [4] */
+      console.log(user.name + "in directive");
+        
+  }
+  
+  
+ function test(user1, user2) {
+   console.log("USER 1: " + user1.name + " USER 2: " + user2.name);
+ }
+}
+</script>
+</body>
+</html>
