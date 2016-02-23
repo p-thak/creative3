@@ -125,6 +125,11 @@ body {
     font: bold;
   }
 
+  .choose {
+    text-align: relative;
+    clear: both;
+  }
+
 </style>
 </head>
 <body>
@@ -141,16 +146,21 @@ body {
        <input placeholder='Spirit Animal' ng-model='userForm.spiritAnimal'/>
 	      <input placeholder='Image Url' ng-model='userForm.url'/>
         <br>
-	      <button type='submit'>Add New Player</button>
+	      <button ng-if="userForm.name!=''" ng-if="userForm.url" type='submit'>Add New Player</button>
 	</form>
+
 	<ul class='User-list'>
 	 <li ng-repeat='user in users'>
 	   <avatar user = 'user' ng-click=alert("here")/>
        
 	 </li>
+  </ul>
+   <br>
+   <div class="choose">
    <h2>
-    Choose who will fight and find who will win.
+    Choose who you want to fight and find who will win.
   </h2>
+  </div>
       
       <select ng-model="myselect" ng-options="user as user.name for user in users"></select>
       <select ng-model="myselect2" ng-options="user as user.name for user in users"></select>
@@ -158,23 +168,8 @@ body {
       <br>
 
 
- <button class="btn btn-primary" ng-if="myselect!=myselect2"  ng-click="Battle(myselect,myselect2)" >Fight</button>
-    <!-- 
-<details id="details" ng-open="open">
-   <summary>Fight!</summary>
- <!--
-<button class="btn btn-primary"  ng-if="myselect!=myselect2" ng-click="open()">Fight</button>
--->
- <!--
-  <container class="winBox">
-    <p class = "winSentence"> The Winner is  {{winnerName}}</p> 
-    <img src={{winnerURL}} width = "100px">
+ <button class="btn btn-primary" ng-if="myselect!=myselect2"  ng-if="myselect!=''" ng-if="myselect2!=''" ng-click="Battle(myselect,myselect2)" >Fight</button>
 
-    <p>{{winnerName}}'s score = {{winnerScore}}</p>
-     {{loserName}}'s score = {{loserScore}} </p><br>
-  </container>
-</details>
--->
 <div class="modal" modal="showModal" ng-show="showModal">
  <h3 class = "winSentence"> The Winner is  {{winnerName}}</h3> 
     <img src={{winnerURL}} width = "100px">
